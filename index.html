@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 12 Monday Practice Quiz</title>
+<style>
+    /* --- Color Variables --- */
+    :root {
+        /* Default: Dark Theme */
+        --bg-color: #2d343e; /* Dark background */
+        --container-bg: #3c424f; /* Slightly lighter container */
+        --text-color: #e8e6e3; /* Light text */
+        --question-text-color: #8ab4f8; /* Light blue for questions */
+        --lo-text-color: #b0c4de; /* Lighter blue for learning objective */
+        --border-color: #555; /* Darker borders */
+        --separator-color: #4a4f5a;
+        --label-bg: #454c5a;
+        --label-border: #6c757d;
+        --label-hover-bg: #525966;
+        --label-hover-border: #7a828a;
+        --button-bg: #8ab4f8;
+        --button-text: #202124;
+        --button-hover-bg: #a3c5f9;
+        --button-disabled-bg: #5f6368;
+        --feedback-correct-bg: #344e41;
+        --feedback-correct-text: #c7f9cc;
+        --feedback-correct-border: #52b788;
+        --feedback-incorrect-bg: #5e2129;
+        --feedback-incorrect-text: #f8d7da;
+        --feedback-incorrect-border: #a4133c;
+        --feedback-rationale-text: #adb5bd; /* Lighter gray for rationale */
+        --feedback-source-text: #c7d3e0;
+        --feedback-separator: #6c757d;
+        --radio-accent: #8ab4f8;
+    }
+
+    .light-theme {
+        --bg-color: #eef2f7;
+        --container-bg: #ffffff;
+        --text-color: #343a40;
+        --question-text-color: #0056b3;
+        --lo-text-color: #5a6e8a;
+        --border-color: #dee2e6;
+        --separator-color: #e9ecef;
+        --label-bg: #f8f9fa;
+        --label-border: #ced4da;
+        --label-hover-bg: #e2e6ea;
+        --label-hover-border: #adb5bd;
+        --button-bg: #007bff;
+        --button-text: white;
+        --button-hover-bg: #0056b3;
+        --button-disabled-bg: #6c757d;
+        --feedback-correct-bg: #d1e7dd;
+        --feedback-correct-text: #0f5132;
+        --feedback-correct-border: #badbcc;
+        --feedback-incorrect-bg: #f8d7da;
+        --feedback-incorrect-text: #842029;
+        --feedback-incorrect-border: #f5c2c7;
+        --feedback-rationale-text: #495057;
+        --feedback-source-text: #343a40;
+        --feedback-separator: #ccc;
+        --radio-accent: #007bff;
+    }
+
+    /* --- General Styles --- */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        line-height: 1.7;
+        margin: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        padding-bottom: 40px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    #theme-toggle-button {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 8px 12px;
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: 1px solid var(--label-border);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        z-index: 1000;
+         transition: background-color 0.3s, color 0.3s;
+    }
+     #theme-toggle-button:hover {
+         opacity: 0.8;
+     }
+
+
+    #quiz-container {
+        max-width: 900px;
+        margin: 80px auto 30px auto;
+        background: var(--container-bg);
+        padding: 25px 35px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border-color);
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .question-block {
+        margin-bottom: 35px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--separator-color);
+        transition: border-color 0.3s;
+    }
+
+    .question-block:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 5px;
+    }
+    
+    .learning-objective {
+        font-size: 0.85em;
+        font-style: italic;
+        color: var(--lo-text-color);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--separator-color);
+    }
+
+    .question-text {
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 18px;
+        color: var(--question-text-color);
+        transition: color 0.3s;
+    }
+
+    .options label {
+        display: block;
+        margin-bottom: 12px;
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid var(--label-border);
+        background-color: var(--label-bg);
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    }
+
+    .options label:hover {
+        background-color: var(--label-hover-bg);
+        border-color: var(--label-hover-border);
+    }
+
+    .options input[type="radio"]:checked+span {
+         font-weight: bold;
+         color: var(--question-text-color);
+    }
+    .options input[type="radio"] {
+        margin-right: 12px;
+        accent-color: var(--radio-accent);
+    }
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .check-button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: background-color 0.2s, color 0.2s, opacity 0.2s;
+        background-color: var(--button-bg);
+        color: var(--button-text);
+    }
+
+    .check-button:hover {
+        opacity: 0.85;
+    }
+
+     .check-button:disabled {
+         background-color: var(--button-disabled-bg);
+         cursor: not-allowed;
+         opacity: 0.7;
+     }
+
+    .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 0.95em;
+        display: none;
+        border: 1px solid transparent;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    .feedback.correct {
+        background-color: var(--feedback-correct-bg);
+        color: var(--feedback-correct-text);
+        border-color: var(--feedback-correct-border);
+        display: block;
+    }
+
+    .feedback.incorrect {
+        background-color: var(--feedback-incorrect-bg);
+        color: var(--feedback-incorrect-text);
+        border-color: var(--feedback-incorrect-border);
+        display: block;
+    }
+
+    .feedback-status {
+         font-weight: bold;
+         font-size: 1.1em;
+         display: block;
+         margin-bottom: 8px;
+    }
+
+    .feedback-rationale {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--feedback-separator);
+        font-size: 0.9em;
+        color: var(--feedback-rationale-text);
+        transition: color 0.3s, border-color 0.3s;
+    }
+    
+    .feedback-source {
+        margin-top: 10px;
+        font-size: 0.85em;
+        font-style: italic;
+        color: var(--feedback-source-text);
+        background-color: rgba(0,0,0,0.1);
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    h1 {
+        text-align: center;
+        color: var(--question-text-color);
+        margin-top: 30px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+</style>
+</head>
+<body>
+
+    <button id="theme-toggle-button">Toggle Theme</button>
+    <h1>Week 12 Monday Practice Quiz</h1>
+
+    <div id="quiz-container">
+        <!-- Questions will be loaded here by JavaScript -->
+    </div>
+
+<script>
+    const quizData = [
+        // Introduction to the Musculoskeletal System
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 1: Demonstrate & describe the anatomical position, as well as anatomical directions, planes, & movements.",
+            question: "A radiologist is reviewing a series of images that show the body divided into anterior and posterior portions. Which anatomical plane do these images represent?",
+            options: { A: "Sagittal plane", B: "Median plane", C: "Axial plane", D: "Frontal (coronal) plane" },
+            correctAnswer: "D",
+            rationale: "The frontal or coronal plane is a vertical plane that runs perpendicular to the median plane, dividing the body into anterior (front) and posterior (back) parts.",
+            source: "'Coronal or Frontal Plane (vertical plane perpendicular to median plane)' (Introduction to the Musculoskeletal System, Slide 4)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 1: Demonstrate & describe the anatomical position, as well as anatomical directions, planes, & movements.",
+            question: "During a physical therapy session, a patient is instructed to perform an exercise that involves moving their arm away from the midline of their body. Which term best describes this movement?",
+            options: { A: "Adduction", B: "Abduction", C: "Flexion", D: "Extension" },
+            correctAnswer: "B",
+            rationale: "Abduction is the term for moving a body part away from the midline. Adduction is the opposite movement, bringing a body part towards the midline. Flexion and extension refer to decreasing or increasing the angle between body parts.",
+            source: "'Abduction vs. Adduction, moving away from midline, moving towards from midline' (Introduction to the Musculoskeletal System, Slide 7)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 2: Identify the major components of the skeletal system and describe their functions. Distinguish between the axial & appendicular skeletal systems.",
+            question: "A patient sustains multiple fractures in a motor vehicle accident. The physician notes that the injuries are confined to the bones of the head, neck, and trunk. Which division of the skeletal system has been primarily affected?",
+            options: { A: "Appendicular skeleton", B: "Axial skeleton", C: "Synovial skeleton", D: "Cartilaginous skeleton" },
+            correctAnswer: "B",
+            rationale: "The axial skeleton is composed of the bones of the head, neck, and trunk. The appendicular skeleton consists of the bones of the limbs, including the pectoral and pelvic girdles.",
+            source: "'Axial skeleton: Bones of the head, neck, & trunk' (Introduction to the Musculoskeletal System, Slide 13)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 2: Identify the major components of the skeletal system and describe their functions. Distinguish between the axial & appendicular skeletal systems.",
+            question: "A forensic anthropologist is examining a set of skeletal remains. The analysis includes the clavicle, scapula, and bones of the upper and lower limbs. These bones are all part of which major skeletal division?",
+            options: { A: "Axial skeleton", B: "Appendicular skeleton", C: "Vertebral skeleton", D: "Central skeleton" },
+            correctAnswer: "B",
+            rationale: "The appendicular skeleton includes the bones of the limbs, which encompasses the pectoral girdle (clavicle and scapula) and the pelvic girdle, as well as the arm, forearm, hand, thigh, leg, and foot bones.",
+            source: "'Appendicular skeleton: Bones of the limbs (including pectoral & pelvic girdles)' (Introduction to the Musculoskeletal System, Slide 13)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 3: Identify and describe the different types of joints and explain their functions.",
+            question: "A 25-year-old baseball pitcher presents with shoulder pain. An MRI reveals inflammation within the joint, which is characterized by a fluid-filled cavity, an articular capsule, and articular cartilage. This description is characteristic of which type of joint?",
+            options: { A: "Fibrous joint", B: "Synovial joint", C: "Cartilaginous joint", D: "Suture joint" },
+            correctAnswer: "B",
+            rationale: "Synovial joints are characterized by a synovial fluid-filled joint cavity, an articular capsule, a synovial membrane, and articular cartilage. These features distinguish them from fibrous and cartilaginous joints.",
+            source: "'Elements ALWAYS associated with diarthrodial (synovial) joints. • Synovial fluid • Articular cartilage • Articular capsule • Synovial membrane' (Introduction to the Musculoskeletal System, Slide 17)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 3: Identify and describe the different types of joints and explain their functions.",
+            question: "A gymnast is demonstrating extreme flexibility by performing a series of movements at the hip, including flexion, extension, abduction, adduction, and rotation. The hip joint allows for this wide range of motion because it is what type of synovial joint?",
+            options: { A: "Hinge joint", B: "Pivot joint", C: "Plane joint", D: "Ball and socket joint" },
+            correctAnswer: "D",
+            rationale: "Ball and socket joints are multiaxial, allowing for movement in several planes. A rounded head of one bone fits into a concavity on another, permitting flexion, extension, abduction, adduction, and rotation. The hip and shoulder are primary examples.",
+            source: "'Ball and socket In ball and socket joints (multiaxial), a rounded head fits into a concavity, permitting movement on several axes.' (Introduction to the Musculoskeletal System, Slide 17)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 4: Identify the major components of the muscular system, with an emphasis on skeletal muscle, and describe their functions.",
+            question: "A patient is recovering from a prolonged period of bed rest and is noted to have significant muscle weakness. The physical therapist explains that the primary function of skeletal muscle tissue is to produce a specific physical quantity. What is this quantity?",
+            options: { A: "Electrical charge", B: "Heat", C: "Tension", D: "Momentum" },
+            correctAnswer: "C",
+            rationale: "The primary function of muscle tissue is to produce tension, which translates into force. While muscles do produce heat as a byproduct, and are activated by electrical charges, their fundamental mechanical output is tension.",
+            source: "'Ultimately, muscle tissue does primarily one thing: it produces tension → a force' (Introduction to the Musculoskeletal System, Slide 20)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 4: Identify the major components of the muscular system, with an emphasis on skeletal muscle, and describe their functions.",
+            question: "A student is learning about the properties of muscle tissue. They observe that when a muscle is stimulated, it has the ability to shorten. Which characteristic of muscle tissue does this describe?",
+            options: { A: "Irritability", B: "Extensibility", C: "Elasticity", D: "Contractility" },
+            correctAnswer: "D",
+            rationale: "Contractility is the unique ability of a muscle to shorten when it receives sufficient stimulation. Irritability is the ability to respond to stimulation, extensibility is the ability to lengthen, and elasticity is the ability to return to resting length.",
+            source: "'Contractility • Ability of a muscle to shorten when it receives sufficient stimulation' (Introduction to the Musculoskeletal System, Slide 21)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 5: Differentiate between different types of muscle contractions. Determine the role that a muscle or group of muscles serve during movement (agonist, antagonist, or synergist).",
+            question: "A weightlifter is holding a barbell in a stationary position, with the elbow flexed at 90 degrees. Although the biceps brachii is activated, no movement is occurring at the elbow joint. What type of muscle contraction is the biceps performing?",
+            options: { A: "Concentric", B: "Eccentric", C: "Isometric", D: "Isokinetic" },
+            correctAnswer: "C",
+            rationale: "An isometric contraction occurs when a muscle is activated but no movement occurs, and the muscle does not change length. This happens when the force produced by the muscle is equal to the resistance.",
+            source: "'Isometric • Muscle is activated but no movement' (Introduction to the Musculoskeletal System, Slide 23)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 5: Differentiate between different types of muscle contractions. Determine the role that a muscle or group of muscles serve during movement (agonist, antagonist, or synergist).",
+            question: "During the downward phase of a bicep curl, a person is slowly lowering a dumbbell. The biceps brachii muscle is active to control the movement, but it is lengthening rather than shortening. What is the role of the biceps brachii during this specific action?",
+            options: { A: "Agonist performing a concentric contraction", B: "Antagonist performing an eccentric contraction", C: "Agonist performing an eccentric contraction", D: "Synergist performing an isometric contraction" },
+            correctAnswer: "C",
+            rationale: "The biceps brachii is the primary muscle controlling this movement (agonist). Because it is active while lengthening to resist the force of gravity on the dumbbell, it is performing an eccentric contraction.",
+            source: "'Eccentric • Muscle is activated but is elongated' (Introduction to the Musculoskeletal System, Slide 23)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 6: Identify the types of musculoskeletal levers and how they contribute to human motion.",
+            question: "When a person performs a calf raise to stand on their toes, the ball of the foot acts as the fulcrum, the weight of the body is the load, and the calf muscles provide the effort. The load is located between the fulcrum and the effort. This arrangement describes which class of lever?",
+            options: { A: "First-class lever", B: "Second-class lever", C: "Third-class lever", D: "Fourth-class lever" },
+            correctAnswer: "B",
+            rationale: "In a second-class lever, the load is positioned between the fulcrum and the effort. The example of a calf raise, with the fulcrum at the ball of the foot, the body's weight (load) acting through the ankle, and the calf muscles (effort) pulling on the heel, is a classic example.",
+            source: "The schema for a second-class lever shows the load between the fulcrum and the effort, with the calf raise example depicted. (Introduction to the Musculoskeletal System, Slide 29)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 6: Identify the types of musculoskeletal levers and how they contribute to human motion.",
+            question: "Most joint articulations in the human body, such as the elbow joint during a biceps curl, function as a specific class of lever where the effort is applied between the fulcrum and the load. This arrangement prioritizes speed and range of motion over force. Which class of lever is this?",
+            options: { A: "First-class lever", B: "Second-class lever", C: "Third-class lever", D: "Mechanical advantage lever" },
+            correctAnswer: "C",
+            rationale: "In a third-class lever, the effort is applied between the fulcrum and the load. This is the most common type of lever in the human body and does not provide a mechanical advantage, meaning the effort force is greater than the load force.",
+            source: "'Most joint articulations in the human body are class 3 levers.' (Introduction to the Musculoskeletal System, Handout, Page 8)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 7: Differentiate arteries from veins.",
+            question: "During a dissection, a medical student observes a blood vessel with thick, hollow-looking walls. The vessel branches at a wide angle from a larger vessel. Based on these macroscopic features, what type of vessel is the student most likely observing?",
+            options: { A: "Vein", B: "Artery", C: "Capillary", D: "Lymphatic vessel" },
+            correctAnswer: "B",
+            rationale: "Arteries are characterized by having thicker, more robust walls compared to veins, which often makes them appear hollow when cut. They also typically branch at wide or right angles. Veins have thinner, floppy walls and often contain valves.",
+            source: "'Arteries... Thicker walls, look hollow... Branch at right or wide angles' (Introduction to the Musculoskeletal System, Slide 9)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 7: Differentiate arteries from veins.",
+            question: "A surgeon is performing a procedure and notes a set of blood vessels that are running in pairs alongside a single, larger vessel. The paired vessels have thin walls, and upon closer inspection, one is found to contain valves. What type of vessel are these thin-walled structures?",
+            options: { A: "Arteries", B: "Arterioles", C: "Veins", D: "Capillaries" },
+            correctAnswer: "C",
+            rationale: "Veins are characterized by thinner, less rigid walls compared to arteries. They often contain valves to prevent the backflow of blood, and it is common for them to run in pairs (venae comitantes) surrounding an artery.",
+            source: "'Veins... Thinner walls (floppy)... Often contain valves... May run in pairs surrounding artery' (Introduction to the Musculoskeletal System, Slide 9)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 8: Describe the function of the lymphatic system.",
+            question: "A patient develops lymphedema following a mastectomy where several lymph nodes were removed. The swelling is caused by the accumulation of a specific fluid in the tissues. What is the primary composition of this fluid, known as lymph?",
+            options: { A: "Intracellular fluid and red blood cells", B: "Extracellular fluid and leaked plasma proteins", C: "Pure blood plasma", D: "Cytosol and cellular organelles" },
+            correctAnswer: "B",
+            rationale: "Lymph is defined as the extracellular fluid that has been collected from tissues, along with plasma proteins that have leaked from capillaries. The lymphatic system's function is to return this fluid to the venous system.",
+            source: "'Lymph – extracellular fluid collected from tissues and leaked plasma proteins from capillaries (ex. lymphocytes)' (Introduction to the Musculoskeletal System, Slide 12)"
+        },
+        {
+            learningObjective: "(Introduction to the Musculoskeletal System) LO 8: Describe the function of the lymphatic system.",
+            question: "A patient has a localized infection in their foot. The physician notes that the lymph nodes in the groin are swollen and tender. What is the primary function of the lymph nodes in this context?",
+            options: { A: "To produce red blood cells", B: "To store fat", C: "To filter the lymph", D: "To produce hormones" },
+            correctAnswer: "C",
+            rationale: "Lymph nodes are small masses of lymphatic tissue through which lymph is filtered. During an infection, they become active in filtering out pathogens and cellular debris, which can cause them to swell.",
+            source: "'Lymph nodes – small masses of lymphatic tissue through which lymph is filtered' (Introduction to the Musculoskeletal System, Slide 12)"
+        },
+        // Overview of the Nervous System and Spinal Cord
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 1 (Overview Section): Discuss the components of the central nervous system (CNS) and peripheral nervous system (PNS).",
+            question: "A neurologist is evaluating a patient with a disorder affecting the brain and spinal cord. These two structures are the primary components of which division of the nervous system?",
+            options: { A: "Peripheral nervous system (PNS)", B: "Somatic nervous system", C: "Central nervous system (CNS)", D: "Autonomic nervous system" },
+            correctAnswer: "C",
+            rationale: "The central nervous system (CNS) is defined as being composed of the brain and spinal cord. Its function is to integrate and coordinate neural signals.",
+            source: "'Central Nervous System (CNS): composed of neuronal and glial cells that lie entirely within the brain or spinal cord.' (Peripheral Nervous System and Spinal Cord Histology Handout, Page 1)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 1 (Overview Section): Discuss the components of the central nervous system (CNS) and peripheral nervous system (PNS).",
+            question: "A patient is diagnosed with a condition that affects the ganglia and the nerves that connect the limbs to the spinal cord. These structures are all considered part of which major division of the nervous system?",
+            options: { A: "Central nervous system (CNS)", B: "White matter", C: "Peripheral nervous system (PNS)", D: "Gray matter" },
+            correctAnswer: "C",
+            rationale: "The peripheral nervous system (PNS) consists of all neural structures outside of the CNS, which includes cranial nerves, spinal nerves, and ganglia (collections of nerve cell bodies outside the CNS).",
+            source: "'Peripheral Nervous System (PNS): neuronal and glial cells that lie in part or in their entirety outside the brain and the spinal cord.' (Peripheral Nervous System and Spinal Cord Histology Handout, Page 1)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 2 (Spinal Cord Section): Describe the longitudinal organization of the spinal cord, including its structural features and functional components.",
+            question: "A patient has an injury that affects the spinal cord segments responsible for innervating the upper limbs. This area of the spinal cord is visibly thicker than the regions immediately above and below it. What is this region called?",
+            options: { A: "Conus medullaris", B: "Cervical enlargement", C: "Filum terminale", D: "Lumbar cistern" },
+            correctAnswer: "B",
+            rationale: "The cervical enlargement, comprising spinal cord segments C4-T1, is a region where the spinal cord is wider to accommodate the increased number of neurons required for the innervation of the upper limbs.",
+            source: "'Cervical enlargement – C4-T1 spinal cord segments; associated with the brachial plexus (innervation of upper limb)' (Overview of the Nervous System and Spinal Cord Handout, Page 2)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 2 (Spinal Cord Section): Describe the longitudinal organization of the spinal cord, including its structural features and functional components.",
+            question: "An MRI of an adult patient's spine shows that the tapering inferior end of the spinal cord terminates at the level of the L1 vertebra. What is the anatomical term for this terminal end of the spinal cord?",
+            options: { A: "Cauda equina", B: "Filum terminale", C: "Conus medullaris", D: "Lumbosacral enlargement" },
+            correctAnswer: "C",
+            rationale: "The conus medullaris is the tapering, cone-shaped inferior end of the spinal cord, which in adults typically terminates at the level of the L1 or L2 vertebra.",
+            source: "'Conus medullaris – tapering inferior end of spinal cord that terminates inferior to the lumbosacral enlargement' (Overview of the Nervous System and Spinal Cord Handout, Page 2)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 3 (Spinal Cord Section): Describe a typical spinal nerve, including its functional components, formation, and branching pattern.",
+            question: "A neurosurgeon is carefully dissecting near the intervertebral foramen. They identify the structure formed by the union of the anterior (ventral) and posterior (dorsal) roots. This structure contains both motor and sensory fibers. What is this structure?",
+            options: { A: "Dorsal root ganglion", B: "Spinal nerve", C: "Anterior ramus", D: "Posterior ramus" },
+            correctAnswer: "B",
+            rationale: "The anterior (motor) and posterior (sensory) roots unite within the intervertebral foramen to form a mixed spinal nerve, which carries both types of fibers before branching into rami.",
+            source: "'Anterior & posterior roots unite to form a mixed spinal nerve, which carries sensory & motor innervation, and is located within the intervertebral (IV) foramen.' (Overview of the Nervous System and Spinal Cord Handout, Page 3)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 3 (Spinal Cord Section): Describe a typical spinal nerve, including its functional components, formation, and branching pattern.",
+            question: "After exiting the intervertebral foramen, a spinal nerve divides into two main branches. One branch proceeds to supply the skin and deep muscles of the back. What is this branch called?",
+            options: { A: "Anterior ramus", B: "White ramus communicans", C: "Gray ramus communicans", D: "Posterior ramus" },
+            correctAnswer: "D",
+            rationale: "Each spinal nerve divides into a posterior ramus and an anterior ramus. The posterior ramus is responsible for innervating the skin and deep (intrinsic) muscles of the back.",
+            source: "'Posterior ramus – supplies skin & deep muscles of the back' (Overview of the Nervous System and Spinal Cord Handout, Page 3)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 4 (Spinal Cord Section): Compare the relationship of the spinal cord to spinal nerves and the position of both within the vertebral column. Discuss how spinal nerves are impacted by disc herniation.",
+            question: "A 45-year-old man presents with severe lower back pain radiating down his left leg. An MRI reveals a posterolateral disc herniation between the L4 and L5 vertebrae. Which spinal nerve is most likely being compressed?",
+            options: { A: "L3", B: "L4", C: "L5", D: "S1" },
+            correctAnswer: "C",
+            rationale: "In the lumbar region, a posterolateral disc herniation typically affects the nerve root that is exiting at the level below the disc. Therefore, an L4/L5 disc herniation will most commonly compress the L5 nerve root.",
+            source: "'A herniated disc typically affects the nerve root immediately inferior to it. (For example, the L4/L5 disc impinges on the L5 nerve root.)' (Overview of the Nervous System and Spinal Cord Handout, Page 4)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 4 (Spinal Cord Section): Compare the relationship of the spinal cord to spinal nerves and the position of both within the vertebral column. Discuss how spinal nerves are impacted by disc herniation.",
+            question: "A patient is diagnosed with a herniated disc between the C5 and C6 vertebrae. Given the anatomical relationship of cervical spinal nerves to their corresponding vertebrae, which spinal nerve is most likely compressed?",
+            options: { A: "C4", B: "C5", C: "C6", D: "C7" },
+            correctAnswer: "C",
+            rationale: "In the cervical region (from C1-C7), spinal nerves exit superior to the vertebra of the same number. Therefore, a disc herniation affects the nerve root of the lower vertebral level. A C5/C6 disc herniation will compress the C6 spinal nerve root.",
+            source: "'C5/C6 and C6/C7 IV discs are most commonly ruptured, compressing spinal nerve roots C6 and C7, respectively).' (Overview of the Nervous System and Spinal Cord Handout, Page 4)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 5 (Spinal Cord Section): Identify and describe the three meningeal layers of the spinal cord, the meningeal spaces and contents, and their clinical significance.",
+            question: "An anesthesiologist is preparing to perform an epidural block for a patient in labor. The anesthetic is injected into a space superficial to the dura mater that contains fat and a venous plexus. What is this space called?",
+            options: { A: "Subdural space", B: "Subarachnoid space", C: "Epidural space", D: "Lumbar cistern" },
+            correctAnswer: "C",
+            rationale: "The epidural space is an actual space located between the dura mater and the vertebrae. It is occupied by epidural fat and the internal vertebral venous plexus. Anesthetic injected here affects the spinal nerve roots as they exit the dural sac.",
+            source: "'Epidural space – actual space superficial to the dura mater i. Occupied by epidural fat & the internal vertebral venous plexus' (Overview of the Nervous System and Spinal Cord Handout, Page 5)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 5 (Spinal Cord Section): Identify and describe the three meningeal layers of the spinal cord, the meningeal spaces and contents, and their clinical significance.",
+            question: "A neurologist performs a lumbar puncture to obtain a sample of cerebrospinal fluid (CSF) for diagnostic testing. The needle must be inserted into which meningeal space to successfully collect the fluid?",
+            options: { A: "Epidural space", B: "Subdural space", C: "Subarachnoid space", D: "Dural space" },
+            correctAnswer: "C",
+            rationale: "The subarachnoid space is the actual space located between the arachnoid mater and the pia mater. It is the space that contains cerebrospinal fluid (CSF), which is the target for collection during a lumbar puncture.",
+            source: "'Subarachnoid space – actual space between the arachnoid mater & pia mater i. Contains cerebral spinal fluid (CSF) and vasculature for the spinal cord' (Overview of the Nervous System and Spinal Cord Handout, Page 5)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 6 (Spinal Cord Section): Discuss the basic organization, functions, and common/distinguishing features of general sensory (afferent) fibers. Define a dermatome and explain its relationship to the spinal nerve. Briefly discuss clinical issues associated with sensory nerve fibers, including shingles.",
+            question: "A 68-year-old man presents with a painful, vesicular rash that is localized to a linear strip of skin on one side of his torso. The rash does not cross the midline. This clinical presentation is characteristic of shingles, which affects a single:",
+            options: { A: "Myotome", B: "Sclerotome", C: "Dermatome", D: "Viscerotome" },
+            correctAnswer: "C",
+            rationale: "A dermatome is an area of skin supplied by sensory nerve fibers from a single spinal nerve. Shingles (herpes zoster) is caused by the reactivation of the varicella-zoster virus in a sensory ganglion, and the resulting rash follows the distribution of that single dermatome.",
+            source: "'Clinical Note: Shingles (herpes zoster)...cause a painful rash that occurs in a well-defined dermatomal distribution.' (Overview of the Nervous System and Spinal Cord Handout, Page 7)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 6 (Spinal Cord Section): Discuss the basic organization, functions, and common/distinguishing features of general sensory (afferent) fibers. Define a dermatome and explain its relationship to the spinal nerve. Briefly discuss clinical issues associated with sensory nerve fibers, including shingles.",
+            question: "During a neurological exam, a physician tests sensation at the level of the umbilicus. This landmark corresponds to the area of skin supplied by which specific spinal nerve?",
+            options: { A: "T4", B: "T7", C: "T10", D: "L1" },
+            correctAnswer: "C",
+            rationale: "The dermatomes are mapped to specific surface landmarks on the body. The area of skin around the umbilicus is supplied by the T10 spinal nerve.",
+            source: "'T10 = umbilicus' (Overview of the Nervous System and Spinal Cord, Slide 30)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 7 (Spinal Cord Section): Discuss the basic organization, functions, and common/distinguishing features of general motor (efferent) nerve fibers. Define a myotome and explain its relationship to the spinal nerve. Define a reflex and a reflex arc.",
+            question: "A patient is being tested for muscle strength. The physician asks the patient to abduct their shoulder against resistance. This action is primarily controlled by muscles innervated by the C5 spinal nerve root. The group of muscles supplied by this single spinal nerve is known as a:",
+            options: { A: "Dermatome", B: "Myotome", C: "Sclerotome", D: "Neurome" },
+            correctAnswer: "B",
+            rationale: "A myotome is defined as a group of muscles supplied by the motor fibers of a single spinal nerve. Shoulder abduction is a key action used to test the C5 myotome.",
+            source: "'Myotome a group of muscles supplied by motor nerve fibers of a given spinal nerve' (Overview of the Nervous System and Spinal Cord Handout, Page 3)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 7 (Spinal Cord Section): Discuss the basic organization, functions, and common/distinguishing features of general motor (efferent) nerve fibers. Define a myotome and explain its relationship to the spinal nerve. Define a reflex and a reflex arc.",
+            question: "When a physician taps a patient's patellar tendon with a reflex hammer, the quadriceps muscle contracts, causing the leg to kick forward. This rapid, involuntary movement occurs via a neural pathway involving a sensory neuron, the spinal cord, and a motor neuron. What is this pathway called?",
+            options: { A: "Descending tract", B: "Ascending tract", C: "Reflex arc", D: "Pyramidal tract" },
+            correctAnswer: "C",
+            rationale: "A reflex arc is the neural pathway that mediates a reflex action. It includes a sensory receptor, sensory neuron, an integration center (like the spinal cord), a motor neuron, and an effector (muscle or gland).",
+            source: "'Reflex arc – neural pathway that carries sensory information from the receptor to the spinal cord (via a sensory neuron), and then carries the response generated by the spinal cord to effector organ(s) during a reflex action (via a motor neuron)' (Overview of the Nervous System and Spinal Cord Handout, Page 8)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 8 (Spinal Cord Section): Explain the basic clinical relevance of a lumbar puncture, particularly its purpose, location, needle placement, and sequential tissue layers traversed during the procedure. Contrast this with an epidural block.",
+            question: "A physician is performing a lumbar puncture on an adult patient. To avoid damaging the spinal cord, the needle is typically inserted between which two vertebral levels?",
+            options: { A: "T12/L1", B: "L1/L2", C: "L4/L5", D: "S1/S2" },
+            correctAnswer: "C",
+            rationale: "In adults, the spinal cord ends at the L1 or L2 vertebral level. A lumbar puncture is performed below this level, typically at L3/L4 or L4/L5, to enter the lumbar cistern (an enlargement of the subarachnoid space) where only the nerve roots of the cauda equina are present, minimizing the risk of spinal cord injury.",
+            source: "'It is usually performed at the L3/L4 or L4/L5 vertebral level. The top of the iliac crest is used as an anatomical landmark...At these levels, there is no danger of damaging the spinal cord.' (Overview of the Nervous System and Spinal Cord Handout, Page 5)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 8 (Spinal Cord Section): Explain the basic clinical relevance of a lumbar puncture, particularly its purpose, location, needle placement, and sequential tissue layers traversed during the procedure. Contrast this with an epidural block.",
+            question: "During a lumbar puncture, the needle must pass through several layers to reach the cerebrospinal fluid. Which of the following is the LAST ligamentous layer the needle must pierce before entering the epidural space?",
+            options: { A: "Supraspinous ligament", B: "Interspinous ligament", C: "Ligamentum flavum", D: "Anterior longitudinal ligament" },
+            correctAnswer: "C",
+            rationale: "The sequence of layers traversed during a lumbar puncture is: skin, subcutaneous tissue, supraspinous ligament, interspinous ligament, ligamentum flavum, epidural space, dura mater, and arachnoid mater. The ligamentum flavum is the final ligament pierced before the needle enters the epidural space.",
+            source: "'...the needle is inserted in the midline between the spinous processes and passes through the following layers: skin, subcutaneous tissue, supraspinous ligament, interspinous ligament, ligamentum flava, epidural space...' (Overview of the Nervous System and Spinal Cord Handout, Page 5)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 9 (Spinal Cord Section): Describe the arterial supply and venous drainage of the vertebral column and spinal cord and its clinical significance.",
+            question: "A patient undergoing surgery for an aortic aneurysm suffers an intraoperative complication, resulting in ischemia to the inferior two-thirds of the spinal cord. This is most likely due to occlusion of which major artery?",
+            options: { A: "Anterior spinal artery", B: "Posterior spinal arteries", C: "Great anterior segmental medullary artery (of Adamkiewicz)", D: "Vertebral artery" },
+            correctAnswer: "C",
+            rationale: "The great anterior segmental medullary artery (of Adamkiewicz) is the largest segmental medullary artery and is crucial for reinforcing circulation to the inferior two-thirds of the spinal cord. Its occlusion can lead to significant neurological deficits.",
+            source: "'Great anterior segmental medullary artery (Artery of Adamkiewicz) – largest anterior segmental medullary artery...reinforces the circulation to the inferior 2/3 of the spinal cord.' (Overview of the Nervous System and Spinal Cord Handout, Page 6)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 9 (Spinal Cord Section): Describe the arterial supply and venous drainage of the vertebral column and spinal cord and its clinical significance.",
+            question: "A patient with prostate cancer develops metastases in their vertebral column and brain. A likely route for the spread of cancer cells is through a valveless network of veins that allows for communication between the pelvis, spine, and cranium. What is this network called?",
+            options: { A: "Portal venous system", B: "Azygos system", C: "Vertebral venous plexus (Batson's plexus)", D: "Caval system" },
+            correctAnswer: "C",
+            rationale: "The internal and external vertebral venous plexuses (collectively known as Batson's plexus) are valveless and communicate with veins in the pelvis, abdomen, thorax, and cranium. This allows for the spread of cancer cells or infections between these regions.",
+            source: "'Batson's plexus is valveless! • Can communicate with: ... Thoracic, abdominal, deep pelvic veins ... Serves as a route for spread of cancer and infection' (Overview of the Nervous System and Spinal Cord, Slide 45)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 10 (Spinal Cord Section): Identify anatomical structures associated with the spinal cord on x-rays, MRI, and CT scans.",
+            question: "A sagittal T2-weighted MRI of the lumbar spine is shown. A structure is seen protruding posteriorly from the intervertebral space between L4 and L5, compressing the thecal sac. What is this structure?",
+            options: { A: "Osteophyte", B: "Herniated disc", C: "Ligamentum flavum hypertrophy", D: "Synovial cyst" },
+            correctAnswer: "B",
+            rationale: "The image shows displacement of the nucleus pulposus from its normal position between the vertebral bodies into the vertebral canal, which is the definition of a herniated disc. This is a common finding on MRI for patients with back pain and radiculopathy.",
+            source: "The image on slide 29 of 'Intervertebral Disc Herniation' shows a sagittal T2w MRI with an arrow pointing to a herniated disc at L4-L5. (Overview of the Nervous System and Spinal Cord, Slide 29)"
+        },
+        {
+            learningObjective: "(Overview of the Nervous System and Spinal Cord) LO 10 (Spinal Cord Section): Identify anatomical structures associated with the spinal cord on x-rays, MRI, and CT scans.",
+            question: "A patient presents with symptoms of spinal stenosis. A transverse CT scan of the lumbar spine reveals a fracture through the region of the vertebra located between the superior and inferior articular processes. This finding is often referred to as the 'Scotty dog with a collar.' What is the name of the fractured structure?",
+            options: { A: "Pedicle", B: "Lamina", C: "Pars interarticularis", D: "Spinous process" },
+            correctAnswer: "C",
+            rationale: "Spondylolysis is a bony defect or fracture in the pars interarticularis. On an oblique radiograph or CT, this fracture can look like a collar on the 'Scotty dog' sign, which is a classic radiological finding.",
+            source: "'Spondylolysis • Bony defect or fracture in the pars interarticularis... Scotty dog will have collar' (Vertebral Column and Back, Slide 43)"
+        },
+        // Membrane Properties of Excitable Cells
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 1: Describe the factors involved in the generation of the membrane potential.",
+            question: "A neurologist is explaining the basis of the resting membrane potential to a medical student. They emphasize that the potential is primarily generated by the diffusion of ions down their electrochemical gradients across a selectively permeable membrane. Which ion has the highest permeability under resting conditions, making it the most influential in setting the resting potential?",
+            options: { A: "Sodium (Na+)", B: "Potassium (K+)", C: "Chloride (Cl-)", D: "Calcium (Ca2+)" },
+            correctAnswer: "B",
+            rationale: "Under resting conditions, the cell membrane is much more permeable to K+ ions than to other ions like Na+ and Cl-. This high permeability is due to the presence of open K+ 'leak' channels. As a result, the resting membrane potential is very close to the equilibrium potential for K+.",
+            source: "'Under resting conditions, membrane permeability is much higher for K+ ions, compared to Na+ and Cl- ions... The resting membrane potential of a cell is determined by the combined action of the relative permeability of the membrane to an ion...' (Membrane Properties of Excitable Cells, Slide 26)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 1: Describe the factors involved in the generation of the membrane potential.",
+            question: "A patient's lab results show severe hypokalemia (low extracellular potassium). How would this altered ionic concentration affect the resting membrane potential of their nerve and muscle cells?",
+            options: { A: "The resting membrane potential will become more positive (depolarize).", B: "The resting membrane potential will become more negative (hyperpolarize).", C: "The resting membrane potential will not change.", D: "The cells will lose their membrane potential entirely." },
+            correctAnswer: "B",
+            rationale: "The resting membrane potential is largely determined by the K+ concentration gradient. A decrease in extracellular K+ increases the concentration gradient for K+ to move out of the cell. This outward movement of positive charge makes the inside of the cell more negative, leading to hyperpolarization.",
+            source: "'Hypokalemia (decrease K+) → increase the diffusion of K+ out of the cell → Vm more negative → Membrane becomes hyperpolarized.' (Membrane Properties of Excitable Cells, Slide 31)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 2: Describe the ionic currents underlying each component of a neuronal and skeletal muscle action potential, including depolarization, overshoot, and repolarization.",
+            question: "During the initial rising phase (depolarization) of a neuronal action potential, the membrane potential rapidly changes from approximately -70 mV to +30 mV. This rapid change is caused by the influx of which ion through voltage-gated channels?",
+            options: { A: "Potassium (K+)", B: "Sodium (Na+)", C: "Chloride (Cl-)", D: "Calcium (Ca2+)" },
+            correctAnswer: "B",
+            rationale: "The depolarization phase of the action potential is initiated by the rapid opening of voltage-gated Na+ channels upon reaching the threshold potential. This allows for a massive influx of positively charged Na+ ions, causing the membrane potential to become positive.",
+            source: "'Depolarization (opening of voltage gated Na+ channels)' and 'Thus, during the depolarizing phase, only PNa+ is increased' (Membrane Properties of Excitable Cells, Slides 36 & 46)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 2: Describe the ionic currents underlying each component of a neuronal and skeletal muscle action potential, including depolarization, overshoot, and repolarization.",
+            question: "Following the peak of an action potential, the membrane potential rapidly returns toward its resting level. What is the primary ionic event responsible for this repolarization phase?",
+            options: { A: "Influx of Na+", B: "Efflux of K+", C: "Influx of Cl-", D: "Efflux of Ca2+" },
+            correctAnswer: "B",
+            rationale: "Repolarization is primarily caused by two events: the inactivation of voltage-gated Na+ channels (stopping Na+ influx) and the opening of voltage-gated K+ channels. The opening of K+ channels allows for the efflux (outward movement) of positive K+ ions, which makes the inside of the cell negative again.",
+            source: "'Repolarization (closure of Na+ and opening of K+, voltage gated channels)' (Membrane Properties of Excitable Cells, Slide 36)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 3: Explain how ion channels translate action potentials into a cellular action in neurons and skeletal muscle cells, and how ion channel abnormalities contribute to disease (e.g., channelopathies).",
+            question: "A patient consumes pufferfish containing tetrodotoxin, a potent neurotoxin. They quickly develop paralysis and respiratory failure. This toxin acts by blocking voltage-gated sodium channels. How does this action prevent cellular function in neurons?",
+            options: { A: "It prevents the repolarization of the membrane.", B: "It prevents the generation and propagation of action potentials.", C: "It causes continuous firing of action potentials.", D: "It blocks the release of neurotransmitters directly." },
+            correctAnswer: "B",
+            rationale: "The rapid influx of sodium through voltage-gated sodium channels is essential for the depolarization phase of an action potential. By blocking these channels, tetrodotoxin prevents neurons from generating or conducting action potentials, leading to paralysis.",
+            source: "The table on slide 55 indicates that Maculotoxin (similar in action to tetrodotoxin) 'Blocks sodium channels,' leading to paralysis. (Membrane Properties of Excitable Cells, Slide 55)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 3: Explain how ion channels translate action potentials into a cellular action in neurons and skeletal muscle cells, and how ion channel abnormalities contribute to disease (e.g., channelopathies).",
+            question: "Certain genetic disorders, known as channelopathies, are caused by defective ion channels. A mutation in a gene coding for a specific ion channel leads to cystic fibrosis. Which type of ion channel is primarily affected in this disease?",
+            options: { A: "Potassium channel", B: "Sodium channel", C: "Calcium channel", D: "Chloride channel" },
+            correctAnswer: "D",
+            rationale: "The provided diagram of 'Ion Channel Diseases 'Channelopathies'' explicitly links Cystic Fibrosis to a defect in ion channels. While not stated in the text, Cystic Fibrosis is a well-known channelopathy caused by mutations in the CFTR gene, which codes for a chloride ion channel.",
+            source: "The diagram explicitly points to 'Cystic fibrosis' as an example of an 'Ion Channel Disease'. (Membrane Properties of Excitable Cells, Slide 4)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 4: In situations of altered ion permeability and/or extracellular ionic concentrations, predict how the membrane potential will be changed (depolarization, hyperpolarization, repolarization) and how the resulting change will affect a cell’s likelihood to fire action potentials.",
+            question: "A patient is diagnosed with hyperkalemia (abnormally high extracellular K+). How does this condition affect the resting membrane potential of excitable cells and their likelihood to fire an action potential?",
+            options: { A: "Hyperpolarization, making them less likely to fire.", B: "Depolarization, making them initially more likely to fire.", C: "No change in membrane potential or excitability.", D: "Hyperpolarization, making them more likely to fire." },
+            correctAnswer: "B",
+            rationale: "High extracellular K+ reduces the concentration gradient for K+ to leave the cell. This reduces the outward flow of positive charge, causing the resting membrane potential to become less negative (depolarize). This depolarization moves the membrane potential closer to the threshold, making the cell initially more excitable.",
+            source: "'Hyperkalemia (increase K+) → Increase K+ in the extracellular fluid... Vm less negative → Membrane becomes depolarized.' (Membrane Properties of Excitable Cells, Slide 31)"
+        },
+        {
+            learningObjective: "(Membrane Properties of Excitable Cells: Ion Channels and Action Potentials) LO 4: In situations of altered ion permeability and/or extracellular ionic concentrations, predict how the membrane potential will be changed (depolarization, hyperpolarization, repolarization) and how the resulting change will affect a cell’s likelihood to fire action potentials.",
+            question: "If a new drug were developed that specifically and significantly increased the permeability of the neuronal membrane to Na+ ions at rest, what would be the expected effect on the resting membrane potential?",
+            options: { A: "The membrane potential would become significantly more negative (hyperpolarize).", B: "The membrane potential would become significantly more positive (depolarize).", C: "The membrane potential would remain unchanged.", D: "The membrane potential would oscillate rapidly." },
+            correctAnswer: "B",
+            rationale: "The resting membrane potential is a balance of the equilibrium potentials of permeable ions, weighted by their permeability. Increasing Na+ permeability would allow the strong inward electrochemical gradient for Na+ (which has a positive equilibrium potential of about +62 mV) to have a much greater influence, driving the membrane potential toward a more positive value.",
+            source: "'...if we now add some permeability for Na+, then ENa+ starts to contribute to Vrest, shifting the membrane towards ENa+.' (Membrane Properties of Excitable Cells, Slide 27)"
+        },
+        // Connective Tissue Histology
+        {
+            learningObjective: "(Connective Tissue Histology) LO 1: List the main cell types found in connective tissue and describe their primary function.",
+            question: "A 45-year-old woman undergoes a skin biopsy. Histological examination reveals numerous cells responsible for secreting the abundant matrix fibers of the dermis. These cells are considered the 'workhorses' of connective tissue. Which cell type is being described?",
+            options: { A: "Adipocyte", B: "Mast cell", C: "Macrophage", D: "Fibroblast" },
+            correctAnswer: "D",
+            rationale: "The fibroblast is the most abundant cell type in connective tissue and is responsible for synthesizing and secreting the extracellular matrix, including collagen and other fibers.",
+            source: "'Fibroblasts: One of the most abundant cell types found in connective tissue is the fibroblast. The fibroblast can be thought of as the work horse of connective tissue. When it is activated, it is responsible for secreting the abundant matrix fibers that are present in the ECM.' (Connective Tissue and Extracellular Matrix Handout, Page 1)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 1: List the main cell types found in connective tissue and describe their primary function.",
+            question: "A patient presents with symptoms of a severe allergic reaction, including hives and difficulty breathing. This reaction is mediated by the massive degranulation of a specific connective tissue cell type, which releases histamine and other inflammatory molecules. Which cell is responsible for this process?",
+            options: { A: "Fibroblast", B: "Mast cell", C: "Adipocyte", D: "Macrophage" },
+            correctAnswer: "B",
+            rationale: "Mast cells are part of the innate immune response and contain granules filled with histamine and other mediators. During an allergic reaction, allergens bind to IgE on the mast cell surface, triggering degranulation and the release of these substances, which cause the symptoms of allergy.",
+            source: "'Mast cells have high affinity binding sites for IgE molecules... During an allergic reaction, the allergen binds to the IgE molecule on the surface of the mast cells. This results in activation of the IgE molecules which initiates downstream signaling events within the cell. The end result is degranulation and release of histamine and other cytokines.' (Connective Tissue and Extracellular Matrix Handout, Page 2)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 2: List the main types of collagen fibers and describe their unique functions.",
+            question: "A geneticist is studying a family with a history of joint hypermobility and skin that is easily bruised and stretched. The condition is traced to a defect in the most abundant type of collagen in the body, which is responsible for forming large fibers and fiber bundles that provide high tensile strength. Which type of collagen is most likely affected?",
+            options: { A: "Type I", B: "Type II", C: "Type III", D: "Type IV" },
+            correctAnswer: "A",
+            rationale: "Type I collagen is a fibril-forming collagen and is the most abundant type in the body, found almost everywhere. It is known for forming large fibers that provide high tensile strength to tissues like bone, skin, tendons, and ligaments.",
+            source: "'Type I collagen. This is a fibril-forming collagen. It is the most abundant type of collagen and can be found almost everywhere.' (Connective Tissue and Extracellular Matrix Handout, Page 5)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 2: List the main types of collagen fibers and describe their unique functions.",
+            question: "A patient with a rare genetic disorder presents with severe kidney and hearing problems. The disorder is found to be caused by a mutation in a type of collagen that does not form fibrils, but instead assembles into an intricate meshwork. This type of collagen is a primary component of the basal lamina. Which type of collagen is defective?",
+            options: { A: "Type I", B: "Type II", C: "Type III", D: "Type IV" },
+            correctAnswer: "D",
+            rationale: "Type IV collagen is a network-forming collagen, creating a mesh-like structure that is a major component of the basal lamina. Mutations in type IV collagen genes are the cause of Alport's syndrome, which affects the basal lamina of the kidneys, eyes, and ears.",
+            source: "'Network forming collagens. As the name suggests, these also do not form fibrils, but rather an intricate network...Classic examples of network forming collagens are type IV and VII...The main place where these collagens are found is within the basement membrane or basal lamina.' (Connective Tissue and Extracellular Matrix Handout, Page 7)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 3: Define ground substances and describe their role in connective tissue.",
+            question: "A biochemist is studying the composition of cartilage. They isolate a large molecule consisting of a protein backbone covalently linked to numerous unbranched, negatively charged polysaccharide chains. These molecules have a high affinity for water, giving the tissue its gel-like consistency and resistance to compression. What is this type of molecule called?",
+            options: { A: "Glycoprotein", B: "Proteoglycan", C: "Glycogen", D: "Lipid" },
+            correctAnswer: "B",
+            rationale: "Proteoglycans are defined as proteins that are covalently linked to glycosaminoglycans (GAGs). Their high negative charge and ability to bind water are crucial for the tissue's ability to resist compressive forces. Aggrecan, found in cartilage, is a primary example.",
+            source: "'Proteoglycans = By definition, these are proteins that are covalently linked to GAGs. A good example of a proteoglycan is aggrecan. Aggrecan (see picture) is the major component of cartilage.' (Connective Tissue and Extracellular Matrix Handout, Page 8)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 3: Define ground substances and describe their role in connective tissue.",
+            question: "A tissue sample is being analyzed for its extracellular matrix components. The analysis identifies a class of unbranched polysaccharides that are highly negatively charged, causing them to attract and retain a large amount of water. This property is essential for the tissue to withstand compressive forces. What is this class of molecules called?",
+            options: { A: "Glycosaminoglycans (GAGs)", B: "Glycoproteins", C: "Phospholipids", D: "Polypeptides" },
+            correctAnswer: "A",
+            rationale: "GAGs are unbranched polysaccharides that are highly negatively charged. This characteristic gives them a high affinity for water, creating a gel-like consistency in the matrix that enables the tissue to resist compression.",
+            source: "'GAGs = Glycosaminoglycans. These are unbranched polysaccharides. GAGs are highly negatively charged. This causes them to have a high affinity for water; retains water in the matrix. This property gives the matrix the consistency of a gel, thus enabling the tissue to withstand compressive forces.' (Connective Tissue and Extracellular Matrix Handout, Page 8)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 4: Define the term “basal lamina” or “basement membrane” and describe how this structure is compromised in Alport’s syndrome.",
+            question: "A renal biopsy from a young male patient with hematuria and proteinuria shows a weakened and defective specialized layer of the extracellular matrix that separates the glomerular capillary endothelium from the podocytes. This layer is crucial for selective filtration in the kidney. What is this structure?",
+            options: { A: "Reticular lamina", B: "Basal lamina", C: "Elastic lamina", D: "Apical membrane" },
+            correctAnswer: "B",
+            rationale: "The basal lamina (or basement membrane) is a specialized layer of the ECM found between the epithelium and underlying connective tissue. In the kidney, it acts as a critical filtration barrier. Alport's syndrome is characterized by a defective basal lamina due to mutations in Type IV collagen.",
+            source: "'The basal lamina performs an absolutely essential function in the kidney. Within the kidney, the basal lamina functions as a highly selective filtration device.' (Connective Tissue and Extracellular Matrix Handout, Page 7)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 4: Define the term “basal lamina” or “basement membrane” and describe how this structure is compromised in Alport’s syndrome.",
+            question: "A patient is diagnosed with Alport's syndrome, a genetic disorder that affects the kidneys, eyes, and ears. The underlying pathology involves a mutation in the gene for a major structural component of the basal lamina. Which protein is defective in this syndrome?",
+            options: { A: "Type I collagen", B: "Type IV collagen", C: "Elastin", D: "Fibrillin" },
+            correctAnswer: "B",
+            rationale: "Alport's syndrome is caused by mutations in the genes that encode Type IV collagen. Since Type IV collagen is a primary component of the basal lamina in the kidney glomerulus, eyes, and ears, defects in this protein lead to the symptoms seen in these organs.",
+            source: "'Alport's syndrome: This disorder is caused by mutations in genes encoding type IV collagen...Patients with this disease have a weakened basal lamina. The filtration function of the kidney is compromised.' (Connective Tissue and Extracellular Matrix Handout, Page 9)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 5: Describe the process of wound healing as it applies to superficial skin wounds versus damage to tendons and ligaments.",
+            question: "A patient suffers a superficial skin laceration. During the proliferative phase of wound healing, which cells are recruited to the site to synthesize new collagen, forming a scar to seal the wound?",
+            options: { A: "Macrophages", B: "Neutrophils", C: "Fibroblasts", D: "Mast cells" },
+            correctAnswer: "C",
+            rationale: "Following the initial inflammatory phase where neutrophils and macrophages clean the wound, fibroblasts are recruited to the site. These activated fibroblasts begin to synthesize collagen, which is the primary component of the scar tissue that repairs the wound.",
+            source: "'Next, fibroblasts are recruited to the site. They become activated and start synthesizing collagen. This is referred to as the proliferative phase.' (Connective Tissue and Extracellular Matrix Handout, Page 10)"
+        },
+        {
+            learningObjective: "(Connective Tissue Histology) LO 5: Describe the process of wound healing as it applies to superficial skin wounds versus damage to tendons and ligaments.",
+            question: "An athlete suffers a complete tear of their Achilles tendon. The surgeon explains that healing will be a slow and difficult process because, unlike skin, tendons are relatively avascular and are composed of large, dense, highly organized bundles of a specific protein. What is this protein?",
+            options: { A: "Elastin", B: "Keratin", C: "Collagen", D: "Myosin" },
+            correctAnswer: "C",
+            rationale: "Tendons are a type of dense regular connective tissue. They are relatively avascular and contain large, highly organized bundles of collagen. These properties make them strong but also slow to heal compared to more vascular tissues like skin.",
+            source: "'Tendons and ligaments are types of dense regular connective tissue. This tissue contains few cells, is relatively avascular, and contains large bundles of collagen oriented in a single plane. These properties make repair of these tissues a much harder task.' (Connective Tissue and Extracellular Matrix Handout, Page 10)"
+        },
+        // Peripheral Nervous System and Spinal Cord Histology
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 1: Define the autonomic nervous system (ANS) and explain how it differs from the somatic nervous system.",
+            question: "A pathologist is examining a section of a dorsal root ganglion. They identify large neuronal cell bodies surrounded by smaller, supportive glial cells that provide structural and metabolic support. What is the name of these supportive cells unique to PNS ganglia?",
+            options: { A: "Schwann cells", B: "Astrocytes", C: "Satellite cells", D: "Oligodendrocytes" },
+            correctAnswer: "C",
+            rationale: "Satellite cells are a type of glial cell found in the peripheral nervous system. Their specific function is to surround the neuronal cell bodies within sensory and autonomic ganglia, providing structural and metabolic support.",
+            source: "'Satellite cells: found in sensory & autonomic ganglia, surrounding neuronal cell bodies, provide structural and metabolic support to the neurons' (Peripheral Nervous System and Spinal Cord Histology, Slide 16)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 1: Define the autonomic nervous system (ANS) and explain how it differs from the somatic nervous system.",
+            question: "A nerve biopsy from a patient with a peripheral neuropathy is examined. The cells responsible for forming the myelin sheath around individual axons in the peripheral nervous system are observed to be damaged. Which glial cell type is primarily affected?",
+            options: { A: "Oligodendrocyte", B: "Schwann cell", C: "Astrocyte", D: "Microglia" },
+            correctAnswer: "B",
+            rationale: "In the peripheral nervous system (PNS), Schwann cells are the glial cells responsible for producing the myelin sheath. Each Schwann cell myelinates a single segment of a single axon. Oligodendrocytes perform this function in the CNS.",
+            source: "'Schwann cells: - wrap cell membrane around one axon many times - form myelin sheath, protecting, insulating and speeding transmission along nerve fibers' (Peripheral Nervous System and Spinal Cord Histology, Slide 17)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 2: Describe the histological and structural features of multipolar, bipolar, and unipolar neurons (neuronal cell bodies, dendrites, and axons), explaining their roles in receiving and propagating (transmitting) nerve signals. Identify the major features of chemical synapses such as at the neuromuscular junction.",
+            question: "A histologist is examining a slide of a dorsal root ganglion. They note that the sensory neurons present have a single process that bifurcates into a peripheral process and a central process. What is the structural classification of these neurons?",
+            options: { A: "Multipolar", B: "Bipolar", C: "Pseudo-unipolar", D: "Anaxonic" },
+            correctAnswer: "C",
+            rationale: "Pseudo-unipolar neurons are characterized by a single process that emerges from the cell body and then splits into two branches. This morphology is characteristic of the sensory neurons found in dorsal root ganglia.",
+            source: "'Pseudo-unipolar: a single process with bifurcation into a single dendrite and a single axon, found in dorsal root ganglia & cranial nerve ganglia.' (Peripheral Nervous System and Spinal Cord Histology, Slide 9)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 2: Describe the histological and structural features of multipolar, bipolar, and unipolar neurons (neuronal cell bodies, dendrites, and axons), explaining their roles in receiving and propagating (transmitting) nerve signals. Identify the major features of chemical synapses such as at the neuromuscular junction.",
+            question: "An electron micrograph of a neuromuscular junction is being reviewed. The terminal end of the motor neuron axon is seen to contain numerous small vesicles filled with acetylcholine. What is the anatomical term for this specialized synapse between a motor neuron and a muscle cell?",
+            options: { A: "Axo-dendritic synapse", B: "Motor end plate", C: "Gap junction", D: "Node of Ranvier" },
+            correctAnswer: "B",
+            rationale: "The motor end plate (MEP) is the specific name for the chemical synapse between the terminal end of a motor neuron axon and a muscle fiber. It is characterized by the release of acetylcholine from synaptic vesicles into the synaptic cleft.",
+            source: "'Motor end plate (MEP) is defined as special synapse between axon and muscle cells.' (Peripheral Nervous System and Spinal Cord Histology, Slide 15)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 3: Describe the structure, function, production, and maintenance of the myelin sheaths of axons in the PNS. Describe the difference between myelinated and unmyelinated axons in the PNS.",
+            question: "During the formation of a myelin sheath in the PNS, a Schwann cell wraps its plasma membrane concentrically around a single axon segment. This process excludes the cytoplasm, leading to a compact layering of membranes that provides insulation. What is the resulting multi-layered membrane structure called?",
+            options: { A: "Myelin sheath", B: "Axolemma", C: "Neurilemma", D: "Basal lamina" },
+            correctAnswer: "A",
+            rationale: "The myelin sheath is formed by the concentric wrapping of a Schwann cell's plasma membrane around an axon. This structure acts as an electrical insulator and is essential for rapid, saltatory conduction of nerve impulses.",
+            source: "'As myelination proceeds, the mesaxon rotates around the axon thereby enveloping the axon in concentric layers of Schwann cell cytoplasm and plasma membrane...the axon becomes surrounded by multiple layers of membrane which together constitute the myelin sheath.' (Peripheral Nervous System and Spinal Cord Histology, Slide 18)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 3: Describe the structure, function, production, and maintenance of the myelin sheaths of axons in the PNS. Describe the difference between myelinated and unmyelinated axons in the PNS.",
+            question: "A cross-section of a peripheral nerve shows some axons individually wrapped in many layers of a Schwann cell membrane, while other, smaller axons are seen embedded in channels within a single Schwann cell but without the concentric wrapping. What is the term for these latter axons?",
+            options: { A: "Myelinated", B: "Unmyelinated", C: "Degenerating", D: "Regenerating" },
+            correctAnswer: "B",
+            rationale: "In the PNS, unmyelinated axons are not bare. Instead, one or more axons are embedded within invaginations of a Schwann cell, but they lack the concentric, compacted layers of membrane that constitute a myelin sheath.",
+            source: "'Non-myelinated axons. One or more axons become longitudinally invaginated into a Schwann cell so that each axon is embedded in a channel...' (Peripheral Nervous System and Spinal Cord Histology, Slide 23)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 4: Identify the anterograde movement of secretory vesicles and the retrograde movement of growth factors as part of axonal transport that is required for the normal function, maintenance, and growth of neurons.",
+            question: "A researcher is studying the movement of newly synthesized neurotransmitters, which are packaged into synaptic vesicles in the soma. They observe these vesicles moving from the cell body down the axon to the terminal. What is this direction of transport called?",
+            options: { A: "Retrograde transport", B: "Anterograde transport", C: "Saltatory transport", D: "Passive diffusion" },
+            correctAnswer: "B",
+            rationale: "Anterograde transport is the process of moving materials from the soma (cell body) toward the axon terminal. This includes components like mitochondria, enzymes, and synaptic vesicles.",
+            source: "'Anterograde – transport material from the soma toward the axon (such as mitochondria, enzyme, synaptic vesicles, Ca ions)' (Peripheral Nervous System and Spinal Cord Histology, Slide 10)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 4: Identify the anterograde movement of secretory vesicles and the retrograde movement of growth factors as part of axonal transport that is required for the normal function, maintenance, and growth of neurons.",
+            question: "A neuron takes up nerve growth factor from its target tissue. This signaling molecule must then be transported from the axon terminal back to the cell body to influence gene expression and promote survival. What is this direction of transport called?",
+            options: { A: "Anterograde transport", B: "Retrograde transport", C: "Trans-synaptic transport", D: "Electrical conduction" },
+            correctAnswer: "B",
+            rationale: "Retrograde transport is the process of moving materials from the axon terminal back toward the soma. This is the mechanism used to transport used or damaged components, as well as signaling molecules like growth factors, from the periphery to the cell body.",
+            source: "'Retrograde – transport material from axon toward the soma (such as used synaptic vesicles, damaged mitochondria, growth factors, some pathogens)' (Peripheral Nervous System and Spinal Cord Histology, Slide 10)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 5: Describe how neurons and their associated glia respond following nerve injury. Discuss the structural and functional alterations seen in peripheral nerves undergoing axonal (“Wallerian”) degeneration and axonal regeneration (or not) following injury. Identify Charcot-Marie-Tooth (CMT) disease and Guillain-Barre Syndrome.",
+            question: "Following a traumatic injury that severs a peripheral nerve, the distal segment of the axon and its myelin sheath begin to break down and are cleared away by macrophages and Schwann cells. What is this process of degeneration of the distal stump called?",
+            options: { A: "Chromatolysis", B: "Wallerian degeneration", C: "Axonal sprouting", D: "Apoptosis" },
+            correctAnswer: "B",
+            rationale: "Wallerian degeneration is the active process of degeneration that occurs in the axon segment distal to an injury. It involves the breakdown of the axon and myelin sheath and their subsequent removal by phagocytic cells, which is a prerequisite for successful regeneration.",
+            source: "'Wallerian degeneration. Fragmentation and loss of distal myelin...and axons due to the transection of axons.' (Peripheral Nervous System and Spinal Cord Histology, Slide 37)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 5: Describe how neurons and their associated glia respond following nerve injury. Discuss the structural and functional alterations seen in peripheral nerves undergoing axonal (“Wallerian”) degeneration and axonal regeneration (or not) following injury. Identify Charcot-Marie-Tooth (CMT) disease and Guillain-Barre Syndrome.",
+            question: "A patient presents with rapidly ascending muscle weakness and paralysis after a recent gastrointestinal infection. The condition is diagnosed as Guillain-Barre Syndrome, an autoimmune disorder. What is the primary target of the autoimmune attack in this disease?",
+            options: { A: "Neuronal cell bodies in the CNS", B: "Peripheral nerve myelin", C: "Neuromuscular junctions", D: "Skeletal muscle fibers" },
+            correctAnswer: "B",
+            rationale: "Guillain-Barre Syndrome (GBS) is an autoimmune disorder where the body's immune system attacks the myelin sheath of peripheral nerves. This leads to rapid, segmental demyelination, which impairs nerve conduction and causes the characteristic ascending paralysis.",
+            source: "'Guillain-Barre Syndrome (GBS)...An autoimmune attack on the peripheral nerve myelin, leading to rapid segmental demyelination of peripheral nerves...' (Peripheral Nervous System and Spinal Cord Histology, Slide 40)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 6: Describe the general histological features of the spinal cord, including grey versus white matter, identify components of neuropil, and define the functions of glial cells in the spinal cord of the CNS (astrocytes, oligodendrocytes, microglia, and ependymal cells) and PNS (Schwann cells and satellite cells).",
+            question: "A cross-section of the spinal cord is examined under a microscope. The central, butterfly-shaped region contains a high density of neuronal cell bodies, dendrites, and glial cells. What is this region called?",
+            options: { A: "White matter", B: "Gray matter", C: "Ependyma", D: "Meninges" },
+            correctAnswer: "B",
+            rationale: "The gray matter of the spinal cord is the central, H-shaped (or butterfly-shaped) region. Histologically, it is defined by the presence of neuronal cell bodies, dendrites, unmyelinated axons, and glial cells.",
+            source: "'Gray Matter: contains large neuronal cell bodies in the anterior horns...Recall: collections of neuronal cell bodies are typically referred to as a nucleus' (Peripheral Nervous System and Spinal Cord Histology, Slide 46)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 6: Describe the general histological features of the spinal cord, including grey versus white matter, identify components of neuropil, and define the functions of glial cells in the spinal cord of the CNS (astrocytes, oligodendrocytes, microglia, and ependymal cells) and PNS (Schwann cells and satellite cells).",
+            question: "A pathologist is examining CNS tissue from a patient with multiple sclerosis. They observe damage to the glial cells that are responsible for forming the myelin sheath around multiple axons within the spinal cord's white matter. Which cell type is affected?",
+            options: { A: "Schwann cell", B: "Astrocyte", C: "Oligodendrocyte", D: "Microglia" },
+            correctAnswer: "C",
+            rationale: "In the central nervous system (CNS), oligodendrocytes are the glial cells responsible for myelination. A single oligodendrocyte can myelinate segments of multiple axons. Damage to these cells is the hallmark of demyelinating diseases like multiple sclerosis.",
+            source: "'Oligodendrocytes - myelin sheath formation in CNS with multiple axons' (Peripheral Nervous System and Spinal Cord Histology, Slide 47)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 7: Describe the general histologic features of a ganglion (ganglia) in the PNS) and identify the different types of cells (neurons, satellite cells, Schwann cells) within. Be able to identify the dorsal root (sensory) ganglia, myenteric ganglia (Auerbach's plexus, intramural ganglia, parasympathetic ganglia), and sympathetic ganglia.",
+            question: "A biopsy of a peripheral ganglion reveals large, pseudo-unipolar neuronal cell bodies that are completely surrounded by a distinct layer of satellite cells. The overall structure is orderly, and no synapses are present within the ganglion. Which type of ganglion is being described?",
+            options: { A: "Sympathetic ganglion", B: "Parasympathetic ganglion", C: "Dorsal root (sensory) ganglion", D: "Myenteric ganglion" },
+            correctAnswer: "C",
+            rationale: "Sensory ganglia, such as the dorsal root ganglion, are characterized by pseudo-unipolar neurons, a complete and well-defined layer of satellite cells surrounding each neuron, and the absence of synapses. Autonomic ganglia, in contrast, contain multipolar neurons and synapses.",
+            source: "The image and description of the Spinal (Dorsal Root) Ganglion on slide 50 highlight 'Pseudo-unipolar neurons' and a 'Complete layer satellite cells'. (Peripheral Nervous System and Spinal Cord Histology, Slide 50)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System and Spinal Cord Histology) LO 7: Describe the general histologic features of a ganglion (ganglia) in the PNS) and identify the different types of cells (neurons, satellite cells, Schwann cells) within. Be able to identify the dorsal root (sensory) ganglia, myenteric ganglia (Auerbach's plexus, intramural ganglia, parasympathetic ganglia), and sympathetic ganglia.",
+            question: "A section of the gastrointestinal tract is examined, and a collection of neuronal cell bodies is found located between the longitudinal and circular muscle layers of the muscularis externa. These neurons are multipolar, and the surrounding satellite cells are less numerous and organized compared to a sensory ganglion. This structure is part of the enteric nervous system. What is this ganglion called?",
+            options: { A: "Dorsal root ganglion", B: "Sympathetic chain ganglion", C: "Celiac ganglion", D: "Myenteric (Auerbach's) plexus" },
+            correctAnswer: "D",
+            rationale: "The myenteric plexus, also known as Auerbach's plexus, is a network of autonomic ganglia located between the muscle layers of the GI tract. It is a type of parasympathetic ganglion and is characterized by multipolar neurons with scattered satellite cells.",
+            source: "'Myenteric (Auerbach's) Plexus -Parasympathetic Ganglia...usually located between different muscle layers' (Peripheral Nervous System and Spinal Cord Histology, Slide 54)"
+        },
+        // Vertebral Column and Back
+        {
+            learningObjective: "(Vertebral Column and Back) LO 1: Identify and describe the normal structure and function of the vertebral column, its joints, and associated ligaments.",
+            question: "A patient suffers a hyperextension injury of the neck ('whiplash') in a rear-end motor vehicle collision. This type of injury can cause tearing of the strong, broad fibrous band that runs along the anterior surface of the vertebral bodies and limits hyperextension. What is this ligament?",
+            options: { A: "Posterior longitudinal ligament", B: "Anterior longitudinal ligament", C: "Ligamentum flavum", D: "Supraspinous ligament" },
+            correctAnswer: "B",
+            rationale: "The anterior longitudinal ligament is located on the anterior aspect of the vertebral bodies and functions to prevent hyperextension of the vertebral column. It is often stretched or torn in whiplash injuries.",
+            source: "'Anterior longitudinal ligament - Located anterior to vertebral body - Prevents hyperextension.' (Vertebral Column and Back, Slide 32)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 1: Identify and describe the normal structure and function of the vertebral column, its joints, and associated ligaments.",
+            question: "A surgeon is performing a procedure on the posterior aspect of the vertebral canal. To gain access, they must remove a ligament that connects the laminae of adjacent vertebrae. This ligament is notable for its yellowish color due to a high content of elastic fibers. What is this ligament?",
+            options: { A: "Interspinous ligament", B: "Supraspinous ligament", C: "Nuchal ligament", D: "Ligamentum flavum" },
+            correctAnswer: "D",
+            rationale: "The ligamentum flavum is a yellow ligament that connects the laminae of adjacent vertebrae, forming part of the posterior wall of the vertebral canal. It must be pierced during procedures like a lumbar puncture.",
+            source: "'Ligamentum flavum - Located between lamina.' (Vertebral Column and Back, Slide 32)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 2: Differentiate the five regions of the vertebral column. Identify and describe the parts of a typical vertebra, and compare vertebrae from each region.",
+            question: "A forensic anthropologist is examining an isolated vertebra. The vertebra has a large, kidney-shaped body, a triangular vertebral foramen, and a short, stout spinous process. It lacks costal facets and transverse foramina. Based on these features, from which region of the vertebral column did this vertebra most likely originate?",
+            options: { A: "Cervical", B: "Thoracic", C: "Lumbar", D: "Sacral" },
+            correctAnswer: "C",
+            rationale: "Lumbar vertebrae are characterized by their large vertebral bodies (to support body weight), sturdy pedicles, and short, stout spinous processes. They lack the transverse foramina of cervical vertebrae and the costal facets of thoracic vertebrae.",
+            source: "'Lumbar Vertebrae • Large vertebral body • Sturdy pedicles • Short and stout spinous process' (Vertebral Column and Back, Slide 25)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 2: Differentiate the five regions of the vertebral column. Identify and describe the parts of a typical vertebra, and compare vertebrae from each region.",
+            question: "An anatomy student is studying a vertebra that has a heart-shaped body, long spinous process that slopes inferiorly, and costal facets on its body and transverse processes for articulation with ribs. These features are characteristic of which type of vertebra?",
+            options: { A: "Cervical", B: "Thoracic", C: "Lumbar", D: "Coccygeal" },
+            correctAnswer: "B",
+            rationale: "Thoracic vertebrae are unique in that they possess costal facets for articulation with the ribs. They also typically have a heart-shaped body and a long, downward-pointing spinous process.",
+            source: "'Thoracic Vertebrae • Transverse processes contains a costal facet - For articulation with tubercle of the rib • Superior and inferior costal facets - For articulation with the head of the rib • Long spinous process' (Vertebral Column and Back, Slide 23)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 3: Evaluate normal vertebral curvatures, and distinguish features of abnormal vertebral curvatures such as kyphosis, lordosis, and scoliosis.",
+            question: "An elderly patient presents with an exaggerated posterior curvature of the thoracic spine, commonly known as a 'humpback.' This condition can be caused by degenerative diseases like osteoporosis. What is the clinical term for this abnormal curvature?",
+            options: { A: "Scoliosis", B: "Lordosis", C: "Kyphosis", D: "Spondylosis" },
+            correctAnswer: "C",
+            rationale: "Kyphosis is defined as an excessive posterior curvature of the thoracic vertebrae, leading to a 'hunchback' or 'humpback' appearance. It is often associated with aging and degenerative diseases.",
+            source: "'Kyphosis • Hunch back or humpback • Excessive curvature of the thoracic vertebrae' (Vertebral Column and Back, Slide 9)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 3: Evaluate normal vertebral curvatures, and distinguish features of abnormal vertebral curvatures such as kyphosis, lordosis, and scoliosis.",
+            question: "A physical examination of an adolescent reveals an abnormal lateral curvature of the spine, accompanied by rotation of the vertebrae. This condition is known as:",
+            options: { A: "Kyphosis", B: "Lordosis", C: "Scoliosis", D: "Spondylolisthesis" },
+            correctAnswer: "C",
+            rationale: "Scoliosis is characterized by an increased lateral curvature of the spine, which is often coupled with rotation of the vertebrae. It is distinct from kyphosis (posterior curvature) and lordosis (anterior curvature).",
+            source: "'Scoliosis • Increased lateral curvature of the spine with vertebrae rotation' (Vertebral Column and Back, Slide 11)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 4: Identify and describe the components and function of an intervertebral (IV) disc. Discuss the clinical implications of disc herniations.",
+            question: "An intervertebral disc is composed of a tough outer fibrous ring and a gelatinous inner core. What is the name of this inner core, which is responsible for the disc's shock-absorbing properties?",
+            options: { A: "Anulus fibrosus", B: "Nucleus pulposus", C: "Vertebral endplate", D: "Sharpey's fibers" },
+            correctAnswer: "B",
+            rationale: "The intervertebral disc has two main parts: the outer anulus fibrosus and the inner nucleus pulposus. The nucleus pulposus is a gelatinous material with a high water content that acts as a shock absorber.",
+            source: "'Two parts: - Nucleus pulposus -> Gelatinous material with high H2O content - Annulus fibrosus -> Concentric layer of fibrocartilage' (Vertebral Column and Back, Slide 37)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 4: Identify and describe the components and function of an intervertebral (IV) disc. Discuss the clinical implications of disc herniations.",
+            question: "A patient experiences a herniated disc in their lumbar spine. This condition involves the protrusion of the nucleus pulposus through a tear in which surrounding structure?",
+            options: { A: "Anterior longitudinal ligament", B: "Anulus fibrosus", C: "Vertebral body", D: "Ligamentum flavum" },
+            correctAnswer: "B",
+            rationale: "A herniated disc occurs when the inner nucleus pulposus protrudes through the outer anulus fibrosus. The posterior longitudinal ligament helps prevent purely posterior herniations, so they are often posterolateral.",
+            source: "'Herniated Discs • Due to protrusion of the nucleus pulposus into or through the anulus fibrosus' (Vertebral Column and Back, Slide 38)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 5: Discuss the clinical presentation and anatomical basis for the following: spondylosis, spondylolisthesis and injuries associated with the vertebral column.",
+            question: "An oblique X-ray of a young athlete with lower back pain reveals a fracture in the pars interarticularis of the L5 vertebra, resembling a 'collar' on the 'Scotty dog' sign. What is the clinical term for this specific defect?",
+            options: { A: "Spondylolisthesis", B: "Spondylolysis", C: "Spinal stenosis", D: "Disc herniation" },
+            correctAnswer: "B",
+            rationale: "Spondylolysis is a bony defect or stress fracture in the pars interarticularis, the part of the vertebra between the superior and inferior articular processes. It is common in athletes who perform repetitive hyperextension movements.",
+            source: "'Spondylolysis • Bony defect or fracture in the pars interarticularis... Broken neck at 'Scotty dog' indicates spondylolysis' (Vertebral Column and Back, Slide 43)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 5: Discuss the clinical presentation and anatomical basis for the following: spondylosis, spondylolisthesis and injuries associated with the vertebral column.",
+            question: "A patient is diagnosed with spondylolisthesis at the L5-S1 level. What is the defining characteristic of this condition?",
+            options: { A: "Narrowing of the spinal canal", B: "A fracture in the pars interarticularis", C: "Anterior displacement of one vertebra relative to the one below it", D: "Degeneration of the intervertebral disc" },
+            correctAnswer: "C",
+            rationale: "Spondylolisthesis is the displacement, typically an anterior slippage, of one vertebra compared to the adjacent vertebra. It is common at the L5-S1 junction and can be a progression of bilateral spondylolysis.",
+            source: "'Spondylolisthesis • Displacement of one vertebra compared to another • Common at the L5-S1 junction, with L5 slipping anterior over S1' (Vertebral Column and Back, Slide 44)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 6: Identify & describe the superficial and deep back muscles, including their attachments, innervation, blood supply, major actions, and clinical testing. Predict the functional consequences of injury to or paralysis of these muscles.",
+            question: "A patient presents with weakness in shrugging their shoulders against resistance. This finding suggests a potential injury to the nerve that provides motor innervation to the trapezius muscle. Which nerve is most likely affected?",
+            options: { A: "Dorsal scapular nerve", B: "Thoracodorsal nerve", C: "Spinal accessory nerve (CN XI)", D: "Long thoracic nerve" },
+            correctAnswer: "C",
+            rationale: "The trapezius muscle is responsible for elevating, retracting, and depressing the scapula. Its primary motor innervation is from the spinal accessory nerve (CN XI). Testing the ability to shrug the shoulders is a clinical test for the function of this nerve.",
+            source: "'Innervation - Motor: Spinal accessory nerve (CN XI)' (Vertebral Column and Back, Slide 58)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 6: Identify & describe the superficial and deep back muscles, including their attachments, innervation, blood supply, major actions, and clinical testing. Predict the functional consequences of injury to or paralysis of these muscles.",
+            question: "A rock climber is adept at pulling their body upward. This powerful adduction, extension, and medial rotation of the arm is primarily performed by a large, fan-shaped muscle of the back. What is this muscle?",
+            options: { A: "Trapezius", B: "Rhomboid major", C: "Latissimus dorsi", D: "Erector spinae" },
+            correctAnswer: "C",
+            rationale: "The latissimus dorsi is a large muscle that attaches from the spine and iliac crest to the floor of the intertubercular groove of the humerus. Its primary actions are adduction, extension, and medial rotation of the arm, making it the 'climber's muscle.'",
+            source: "'Action - Adduction, extension, and medial rotation of the arm' (Vertebral Column and Back, Slide 61)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 7: Identify anatomical structures associated with the back and vertebral column on X-Rays, MRI, and CT scans.",
+            question: "An MRI of the lumbar spine shows narrowing of the vertebral foramen, which is causing compression of the spinal cord. This condition is often caused by bulging discs or bone spurs. What is the clinical term for this narrowing?",
+            options: { A: "Spondylolysis", B: "Spondylolisthesis", C: "Spinal stenosis", D: "Scoliosis" },
+            correctAnswer: "C",
+            rationale: "Spinal stenosis is the narrowing of the vertebral canal or intervertebral foramina, which can lead to compression of the spinal cord or nerve roots. The sagittal MRI on the slide clearly shows this narrowing.",
+            source: "'Spinal Stenosis • Narrowing of the vertebral foramen/canal or intervertebral foramen - Compresses spinal cord or spinal nerve roots' (Vertebral Column and Back, Slide 45)"
+        },
+        {
+            learningObjective: "(Vertebral Column and Back) LO 7: Identify anatomical structures associated with the back and vertebral column on X-Rays, MRI, and CT scans.",
+            question: "An oblique radiograph of the lumbar spine is taken to evaluate for a possible fracture. The radiologist identifies a formation of vertebral structures that resembles a 'Scotty dog.' The 'eye' of this dog corresponds to which part of the vertebra?",
+            options: { A: "Spinous process", B: "Transverse process", C: "Pedicle", D: "Lamina" },
+            correctAnswer: "C",
+            rationale: "In the 'Scotty dog' sign seen on oblique radiographs, the pedicle forms the eye, the transverse process forms the nose, the superior articular process forms the ear, and the inferior articular process forms the front leg.",
+            source: "(C) 'Scotty dog sign' in posterolateral oblique view of lumbar vertebra... Pedicle (eye)' (Vertebral Column and Back, Slide 43)"
+        },
+        // Peripheral Nervous System: Somatic and Autonomic
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 1: Define the autonomic nervous system (ANS) and explain how it differs from the somatic nervous system.",
+            question: "A key difference between the somatic and autonomic efferent pathways is the number of neurons connecting the CNS to the effector organ. How many motor/efferent neurons are found in the visceral efferent (autonomic) pathway?",
+            options: { A: "One", B: "Two", C: "Three", D: "Varies by organ" },
+            correctAnswer: "B",
+            rationale: "The visceral efferent (autonomic) pathway consists of a two-neuron chain: a pre-ganglionic neuron with its cell body in the CNS and a post-ganglionic neuron with its cell body in an autonomic ganglion. The somatic efferent pathway uses a single motor neuron.",
+            source: "'Visceral efferent (ANS)... 2 motor/efferent neurons • Pre-ganglionic neuron • Post-ganglionic neuron' (Peripheral Nervous System: Somatic and Autonomic, Slide 5)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 1: Define the autonomic nervous system (ANS) and explain how it differs from the somatic nervous system.",
+            question: "While the somatic efferent system can only innervate one type of tissue, the visceral efferent (autonomic) system innervates a variety of tissues. Which of the following is exclusively innervated by the somatic efferent system?",
+            options: { A: "Smooth muscle", B: "Cardiac muscle", C: "Glands", D: "Skeletal muscle" },
+            correctAnswer: "D",
+            rationale: "The somatic efferent system exclusively innervates skeletal muscle, controlling voluntary movements. The autonomic nervous system innervates smooth muscle, cardiac muscle, and glands to regulate involuntary functions.",
+            source: "'Somatic efferent • Innervates only skeletal muscle' (Peripheral Nervous System: Somatic and Autonomic, Slide 5)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 2: Compare and contrast the sympathetic and parasympathetic autonomic pathways and enteric nervous system, including their basic organization, functions, and common/distinguishing features.",
+            question: "A patient in a stressful situation experiences an increased heart rate, dilated pupils, and reduced digestive activity. These physiological changes are characteristic of the 'fight or flight' response, which is mediated by which division of the autonomic nervous system?",
+            options: { A: "Parasympathetic division", B: "Sympathetic division", C: "Enteric nervous system", D: "Somatic nervous system" },
+            correctAnswer: "B",
+            rationale: "The sympathetic division of the ANS is responsible for the 'fight or flight' response, preparing the body for action by increasing heart rate, dilating airways, and diverting blood flow away from non-essential functions like digestion.",
+            source: "'Sympathetic Division Overview... Function(s): • 'Fight or flight' response' (Peripheral Nervous System: Somatic and Autonomic, Slide 9)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 2: Compare and contrast the sympathetic and parasympathetic autonomic pathways and enteric nervous system, including their basic organization, functions, and common/distinguishing features.",
+            question: "The pre-ganglionic neurons of the sympathetic division originate from a specific region of the spinal cord. What is the term for this anatomical origin?",
+            options: { A: "Craniosacral", B: "Cervicothoracic", C: "Thoracolumbar", D: "Lumbosacral" },
+            correctAnswer: "C",
+            rationale: "The sympathetic division is also known as the thoracolumbar division because its pre-ganglionic neurons have their cell bodies located in the intermediolateral cell column (IMLCC) of the spinal cord from segments T1 to L2/3.",
+            source: "'Sympathetic Division Overview • Thoracolumbar division • Pre-ganglionic sympathetic neurons • Intermediolateral cell column (IMLCC) T1-L2/3' (Peripheral Nervous System: Somatic and Autonomic, Slide 9)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 3: Draw the route that various autonomic nerves use to reach their target(s).",
+            question: "A pre-ganglionic sympathetic axon exits the spinal cord at the T2 level. It needs to reach a post-ganglionic neuron that will innervate the dilator pupillae muscle in the eye. What course must this pre-ganglionic fiber take within the sympathetic trunk?",
+            options: { A: "Descend to a lower ganglion", B: "Synapse at the level of exit (T2)", C: "Pass through without synapsing", D: "Ascend to a higher ganglion" },
+            correctAnswer: "D",
+            rationale: "Sympathetic innervation to the head originates from the T1-L2/3 spinal cord levels. To reach targets in the head, pre-ganglionic fibers must enter the sympathetic trunk and ascend to synapse in a cervical ganglion, typically the superior cervical ganglion.",
+            source: "'Course #1 • Pre-ganglionic fibers ascend to a level above T1... Post-ganglionic fibers are for: • Innervation of the head' (Peripheral Nervous System: Somatic and Autonomic, Slide 16)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 3: Draw the route that various autonomic nerves use to reach their target(s).",
+            question: "A pre-ganglionic sympathetic fiber exits the spinal cord at T10 and passes through the sympathetic trunk without synapsing. It then travels in an abdominopelvic splanchnic nerve to synapse in a ganglion located on the anterolateral surface of the abdominal aorta. What is this type of ganglion called?",
+            options: { A: "Paravertebral ganglion", B: "Intrinsic ganglion", C: "Prevertebral ganglion", D: "Dorsal root ganglion" },
+            correctAnswer: "C",
+            rationale: "Pre-ganglionic sympathetic fibers destined for abdominopelvic viscera pass through the sympathetic trunk (paravertebral ganglia) without synapsing. They then travel via splanchnic nerves to synapse in prevertebral (preaortic/collateral) ganglia located near the major abdominal arteries.",
+            source: "'Course #4 • Pre-ganglionic fibers pass through sympathetic trunk without synapsing to enter abdominopelvic splanchnic nerve • Pre-ganglionic fibers synapse in prevertebral ganglia' (Peripheral Nervous System: Somatic and Autonomic, Slide 19)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 4: Discuss visceral afferent fibers with reference to afferent information conveyed, pathways followed, and the phenomenon of referred pain.",
+            question: "A patient experiencing a myocardial infarction reports pain in their chest that radiates to the left arm and jaw. This phenomenon, where pain from a visceral organ is perceived at a different somatic location, is known as:",
+            options: { A: "Phantom limb pain", B: "Neuropathic pain", C: "Referred pain", D: "Nociceptive pain" },
+            correctAnswer: "C",
+            rationale: "Referred pain is defined as pain that is perceived at a location other than the site of the painful stimulus. It is thought to occur because visceral afferent (sensory) fibers and somatic afferent fibers converge on the same spinal cord segments, and the brain misinterprets the origin of the visceral pain signal.",
+            source: "'Referred Pain • Pain perceived at a location other than the site of origin of the painful stimulus • Incoming somatic and visceral afferent fibers converge' (Peripheral Nervous System: Somatic and Autonomic, Slide 34)"
+        },
+        {
+            learningObjective: "(Peripheral Nervous System: Somatic and Autonomic) LO 4: Discuss visceral afferent fibers with reference to afferent information conveyed, pathways followed, and the phenomenon of referred pain.",
+            question: "Pain originating from the appendix is initially felt as a dull, poorly localized ache in the periumbilical region. This visceral pain sensation travels back to the spinal cord following which pathway?",
+            options: { A: "Parasympathetic fibers to the S2-S4 spinal segments", B: "Somatic fibers to the T10 spinal segment", C: "Sympathetic fibers to the T10 spinal segment", D: "Parasympathetic fibers via the vagus nerve" },
+            correctAnswer: "C",
+            rationale: "Visceral pain from abdominal organs located above the pelvic pain line (like the appendix) travels retrogradely along sympathetic fibers to the dorsal root ganglia and spinal cord segments corresponding to that organ's innervation. The appendix is innervated by sympathetic fibers from approximately the T10 level.",
+            source: "'Visceral pain in the... Thorax and abdomen will parallel sympathetic fibers back to dorsal root ganglia and spinal cord segments T1-L2' (Peripheral Nervous System: Somatic and Autonomic, Slide 33)"
+        }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+    const themeToggleButton = document.getElementById('theme-toggle-button');
+    const bodyElement = document.body;
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            bodyElement.classList.add('light-theme');
+            themeToggleButton.textContent = 'Switch to Dark Mode';
+        } else {
+            bodyElement.classList.remove('light-theme');
+            themeToggleButton.textContent = 'Switch to Light Mode';
+        }
+        localStorage.setItem('quizTheme', theme);
+    }
+
+    function loadQuiz() {
+        quizData.forEach((qData, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.classList.add('question-block');
+            questionBlock.id = `q${index}`;
+
+            const loText = document.createElement('div');
+            loText.classList.add('learning-objective');
+            loText.textContent = qData.learningObjective;
+            questionBlock.appendChild(loText);
+
+            const questionText = document.createElement('p');
+            questionText.classList.add('question-text');
+            questionText.innerHTML = `${index + 1}. ${qData.question}`;
+            questionBlock.appendChild(questionText);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.classList.add('options');
+
+            for (const optionKey in qData.options) {
+                const optionId = `q${index}_${optionKey}`;
+                const label = document.createElement('label');
+                label.htmlFor = optionId;
+                const radioInput = document.createElement('input');
+                radioInput.type = 'radio';
+                radioInput.name = `q${index}`;
+                radioInput.value = optionKey;
+                radioInput.id = optionId;
+                const labelText = document.createElement('span');
+                labelText.textContent = ` ${optionKey}. ${qData.options[optionKey]}`;
+                label.appendChild(radioInput);
+                label.appendChild(labelText);
+                optionsDiv.appendChild(label);
+            }
+            questionBlock.appendChild(optionsDiv);
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('button-container');
+
+            const checkButton = document.createElement('button');
+            checkButton.textContent = 'Check Answer';
+            checkButton.classList.add('check-button');
+            checkButton.onclick = () => checkAnswer(index);
+            buttonContainer.appendChild(checkButton);
+            
+            questionBlock.appendChild(buttonContainer);
+
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.classList.add('feedback');
+            questionBlock.appendChild(feedbackDiv);
+
+            quizContainer.appendChild(questionBlock);
+        });
+    }
+
+    function checkAnswer(questionIndex) {
+        const questionBlockElement = document.getElementById(`q${questionIndex}`);
+        const selectedRadioButton = questionBlockElement.querySelector('input[type="radio"]:checked');
+
+        if (!selectedRadioButton) {
+            alert("Please select an answer first.");
+            return;
+        }
+
+        const selectedOptionKey = selectedRadioButton.value;
+        const qData = quizData[questionIndex];
+        const feedbackDiv = questionBlockElement.querySelector('.feedback');
+        const correct = selectedOptionKey === qData.correctAnswer;
+
+        let feedbackHTML = '';
+
+        if (correct) {
+            feedbackHTML = `<span class="feedback-status">Correct!</span>`;
+            feedbackDiv.className = 'feedback correct';
+        } else {
+             feedbackHTML = `<span class="feedback-status">Incorrect. The correct answer is ${qData.correctAnswer}.</span>`;
+            feedbackDiv.className = 'feedback incorrect';
+        }
+
+        feedbackHTML += `<div class="feedback-rationale"><strong>Rationale:</strong> ${qData.rationale}</div>`;
+        feedbackHTML += `<div class="feedback-source"><strong>Source:</strong> ${qData.source}</div>`;
+        feedbackDiv.innerHTML = feedbackHTML;
+    }
+
+    themeToggleButton.addEventListener('click', () => {
+        if (bodyElement.classList.contains('light-theme')) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('quizTheme') || 'dark';
+        applyTheme(savedTheme);
+        loadQuiz();
+    });
+
+</script>
+  
+</body>
+</html>
