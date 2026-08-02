@@ -1390,7 +1390,7 @@ function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); 
 const sections = [];
 quizData.forEach(q => { if (!sections.includes(q.section)) sections.push(q.section); });
 function shortLabel(name) {
-    const map = {};
+    const map = {"Introduction to the Musculoskeletal System":"Intro to the MSK System","Overview of the Nervous System and Spinal Cord":"Nervous System & Spinal Cord","Membrane Properties of Excitable Cells: Ion Channels and Action Potentials":"Ion Channels & Action Potentials","Peripheral Nervous System and Spinal Cord Histology":"PNS & Spinal Cord Histology","Peripheral Nervous System: Somatic and Autonomic":"PNS: Somatic & Autonomic"};
     return map[name] || name;
 }
 window.__bbShortLabel = shortLabel;
